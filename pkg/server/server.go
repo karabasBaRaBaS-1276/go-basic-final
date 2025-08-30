@@ -3,21 +3,16 @@ package server
 import (
 	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
 // Запускает веб сервер
-// Принимает на вход указатель на логгер
+// Принимает на вход указатель на логгер и порт для запуска сервера
 // Возвращает:
 //   - указатель на настроенный сервер для старта (*http.Server)
-func Get(log *log.Logger) *http.Server {
+func Get(log *log.Logger, port string) *http.Server {
 
-	webDir := "./web"              // Путь относительно рабочей дирректории
-	port := os.Getenv("TODO_PORT") // Порт из переменной окружения TODO_PORT
-	if port == "" {
-		port = "7540" // Порт по умолчанию
-	}
+	webDir := "./web" // Путь относительно рабочей дирректории
 	// http-роутер
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir(webDir)))
