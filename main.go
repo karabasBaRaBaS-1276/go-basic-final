@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
@@ -23,6 +24,7 @@ func loadEnv(log *log.Logger) {
 		}
 	}
 	// Установка переменных по умолчанию
+	setDefaultEnv("TODO_HOST", "localhost")      // Хост для запуска веб сервера по умолчанию
 	setDefaultEnv("TODO_PORT", "7540")           // Порт для запуска веб сервера по умолчанию
 	setDefaultEnv("TODO_DBDRIVER", "sqlite")     // Драйвер для работы с БД
 	setDefaultEnv("TODO_DBFILE", "scheduler.db") // Имя базы данных
@@ -56,9 +58,9 @@ func main() {
 	}()
 
 	// Веб сервер, с которым нам предстоит работать
-	webServer := server.Get(log, os.Getenv("TODO_PORT"))
+	webServer := server.Get(log, fmt.Sprintf("%s:%s", os.Getenv("TODO_HOST"), os.Getenv("TODO_PORT")))
 
-	log.Println("Запускаем веб сервер")
+	log.Printf("Запускаем веб сервер на http://%s\n", webServer.Addr)
 	if err := webServer.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}

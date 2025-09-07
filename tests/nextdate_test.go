@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api"
+	service_nextdate "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/service/next_date"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -46,7 +46,8 @@ func TestNextDateFunc(t *testing.T) {
 	check := func() {
 		for _, v := range tbl {
 			now, _ := time.Parse("20060102", "20240126") // Если сегодня 26 января 2024 года
-			result, err := api.NextDate(now, v.date, v.repeat)
+			service := service_nextdate.New()
+			result, err := service.NextDate(now, v.date, v.repeat)
 
 			if err != nil {
 				assert.ErrorContains(t, err, v.wantError, "Данные для проверки: {Начальное время: %q, Правило для повтора: %q, Ждем в ошибке: %q}",

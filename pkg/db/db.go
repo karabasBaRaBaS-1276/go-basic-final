@@ -16,7 +16,7 @@ const schema = `
 				repeat VARCHAR(128)
 			);
 			
-			CREATE INDEX idx_scheduler_date ON scheduler (date);
+			CREATE INDEX IF NOT EXISTS idx_scheduler_date ON scheduler (date);
 		`
 
 // Инициализация базы данных

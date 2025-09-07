@@ -1,4 +1,4 @@
-package api
+package service_nextdate
 
 import (
 	"errors"
@@ -8,7 +8,16 @@ import (
 	"time"
 )
 
-var errorFormatDate = errors.New("incorrect date format in 'dstart' variable")
+// Структура сервиса
+type Service struct {
+}
+
+// Инициализация экземпляра структуры Service
+func New() *Service {
+	return &Service{}
+}
+
+var errorFormatDate = errors.New("incorrect date format in 'date' variable")
 var errorRepeatIsEmpty = errors.New("variable 'repeat' cannot be empty")
 var errorRepeatFormat = errors.New("incorrect format in 'repeat' variable")
 
@@ -32,7 +41,7 @@ var errorRepeatFormat = errors.New("incorrect format in 'repeat' variable")
 //
 // todo. Переписать внутри. Видится, что стоит разделить внутри на подфункции для каждого символа из 'dmyw'.
 // Это сделает код более читаемым
-func NextDate(now time.Time, dstart string, repeat string) (string, error) {
+func (service *Service) NextDate(now time.Time, dstart string, repeat string) (string, error) {
 
 	dbegin, err := time.Parse("20060102", dstart)
 	if err != nil {
@@ -42,7 +51,6 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	typeRule, dayNumber, weekDays, monthDays, monthNumbers, err := checkAndSpliteRepeat(repeat)
 
 	if err != nil {
-		fmt.Printf("dstart = %s; err = %s\n", dbegin.Format("2006-01-02"), err.Error())
 		return "", fmt.Errorf("%w: %w", errorRepeatFormat, err)
 	}
 
@@ -107,9 +115,6 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			date = date.AddDate(0, 0, 1)
 		}
 	}
-
-	fmt.Printf("dstart = %s; typeRule = %s; dayNumber = %d; weekDays = %d; monthDays = %d; monthNumbers = %d\n ndate = %s\n",
-		dbegin.Format("2006-01-02"), typeRule, dayNumber, weekDays, monthDays, monthNumbers, date.Format("2006-01-02"))
 
 	return date.Format("20060102"), err
 }
