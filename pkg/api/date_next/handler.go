@@ -1,4 +1,4 @@
-package api_nextdate
+package api_date_next
 
 import (
 	"fmt"
@@ -6,18 +6,18 @@ import (
 	"net/http"
 	"time"
 
-	service_nextdate "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/service/next_date"
+	service_date_next "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/service/date_next"
 )
 
 // Структура обработчика
 type Handle struct {
-	log     *log.Logger               // логгер
-	service *service_nextdate.Service // указатель на сервис, релизующий бизнес логику
+	log     *log.Logger                // логгер
+	service *service_date_next.Service // указатель на сервис, релизующий бизнес логику
 }
 
 // Инициализация экземпляра структуры Handle
 func New(log *log.Logger) *Handle {
-	return &Handle{log: log, service: service_nextdate.New()}
+	return &Handle{log: log, service: service_date_next.New()}
 }
 
 // Обработка http запроса получения новой даты

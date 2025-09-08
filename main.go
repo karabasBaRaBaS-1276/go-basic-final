@@ -1,17 +1,14 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
-	database "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/db"
+	dbase "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/db"
 	server "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/server"
 )
-
-var db *sql.DB
 
 // Загрузка переменных окружения
 // Принимает на вход указатель на логгер
@@ -46,19 +43,19 @@ func main() {
 
 	// База данных, с которой нам предстоит работать
 	log.Println("Инициализируем базу данных")
-	db, err := database.Init(os.Getenv("TODO_DBFILE"), os.Getenv("TODO_DBDRIVER"))
+	repository, err := dbase.New(os.Getenv("TODO_DBFILE"), os.Getenv("TODO_DBDRIVER"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	//defer db.Close()
 	defer func() {
-		if err = db.Close(); err != nil {
+		if err = repository.DBase.Close(); err != nil {
 			log.Println(err)
 		}
 	}()
 
 	// Веб сервер, с которым нам предстоит работать
-	webServer := server.Get(log, fmt.Sprintf("%s:%s", os.Getenv("TODO_HOST"), os.Getenv("TODO_PORT")))
+	webServer := server.Get(log, fmt.Sprintf("%s:%s", os.Getenv("TODO_HOST"), os.Getenv("TODO_PORT")), repository)
 
 	log.Printf("Запускаем веб сервер на http://%s\n", webServer.Addr)
 	if err := webServer.ListenAndServe(); err != nil {

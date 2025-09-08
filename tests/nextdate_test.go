@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	service_nextdate "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/service/next_date"
+	service_date_next "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/service/date_next"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +16,7 @@ type nextDateFunc struct {
 	wantError string
 }
 
-var errorFormatDate = errors.New("incorrect date format in 'dstart' variable")
+var errorFormatDate = errors.New("incorrect date format in 'date' variable")
 var errorRepeatIsEmpty = errors.New("variable 'repeat' cannot be empty")
 var errorRepeatFormat = errors.New("incorrect format in 'repeat' variable")
 
@@ -46,7 +46,7 @@ func TestNextDateFunc(t *testing.T) {
 	check := func() {
 		for _, v := range tbl {
 			now, _ := time.Parse("20060102", "20240126") // Если сегодня 26 января 2024 года
-			service := service_nextdate.New()
+			service := service_date_next.New()
 			result, err := service.NextDate(now, v.date, v.repeat)
 
 			if err != nil {

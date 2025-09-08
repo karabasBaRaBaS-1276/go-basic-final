@@ -1,4 +1,4 @@
-package service_nextdate
+package service_date_next
 
 import (
 	"errors"
@@ -48,7 +48,7 @@ func (service *Service) NextDate(now time.Time, dstart string, repeat string) (s
 		return "", fmt.Errorf("%w: %w", errorFormatDate, err)
 	}
 
-	typeRule, dayNumber, weekDays, monthDays, monthNumbers, err := checkAndSpliteRepeat(repeat)
+	typeRule, dayNumber, weekDays, monthDays, monthNumbers, err := CheckAndSpliteRepeat(repeat)
 
 	if err != nil {
 		return "", fmt.Errorf("%w: %w", errorRepeatFormat, err)
@@ -136,7 +136,7 @@ func (service *Service) NextDate(now time.Time, dstart string, repeat string) (s
 //   - monthDays - смещения на дни месяца
 //   - monthNumbers - смещения на номера месяцев
 //   - err - ошибка, если не удалось разделить правила для повтора
-func checkAndSpliteRepeat(repeat string) (typeRule string, dayNumber int, weekDays []int, monthDays []int, monthNumbers []int, err error) {
+func CheckAndSpliteRepeat(repeat string) (typeRule string, dayNumber int, weekDays []int, monthDays []int, monthNumbers []int, err error) {
 
 	if repeat == "" {
 		err = errorRepeatIsEmpty

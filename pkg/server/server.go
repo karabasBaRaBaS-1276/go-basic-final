@@ -5,20 +5,21 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api"
+	api "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api"
+	dbase "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/db"
 )
 
 // Запускает веб сервер
-// Принимает на вход указатель на логгер и порт для запуска сервера
+// Принимает на вход указатель на логгер, адрес для запуска сервера и указатель на хранилище
 // Возвращает:
 //   - указатель на настроенный сервер для старта (*http.Server)
-func Get(log *log.Logger, address string) *http.Server {
+func Get(log *log.Logger, address string, repository *dbase.Repository) *http.Server {
 
 	webDir := "./web" // Путь относительно рабочей дирректории
 	// http-роутер
 	mux := http.NewServeMux()
 
-	api.Init(log, mux)                                 // Обработчики API
+	api.Init(log, mux, repository)                     // Обработчики API
 	mux.Handle("/", http.FileServer(http.Dir(webDir))) // Обработчик статики
 
 	server := &http.Server{
