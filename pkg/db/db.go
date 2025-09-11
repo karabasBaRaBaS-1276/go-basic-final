@@ -27,6 +27,20 @@ const (
 			date, title, comment, repeat) 
 			VALUES (:date, :title, :comment, :repeat
 		);`
+	getTasksByTitleOrCommentQuery = `
+		SELECT id, date, title, comment, repeat FROM scheduler
+		WHERE title LIKE :likeExp OR comment LIKE :likeExp
+		ORDER BY date LIMIT :limit;
+	`
+	getTasksByDateQuery = `
+		SELECT id, date, title, comment, repeat FROM scheduler
+		WHERE date = :dateExp
+		LIMIT :limit;
+	`
+	getTasksQuery = `
+		SELECT id, date, title, comment, repeat FROM scheduler
+		ORDER BY date LIMIT :limit;
+	`
 )
 
 type Repository struct {
@@ -86,4 +100,75 @@ func (repository *Repository) AddTask(task *models.Task) (string, error) {
 	}
 
 	return strconv.Itoa(int(id)), nil
+}
+
+// Получить список ближайших задач планировщика
+func (repository Repository) GetTasks(likeExp string, dateExp string, limit int) (models.TaskList, error) {
+
+	var (
+		rows     *sql.Rows
+		err      error
+		tasks    []models.Task
+		taskList models.TaskList
+	)
+
+	switch {
+	case likeExp != "":
+		pattern := "%" + likeExp + "%"
+		rows, err = repository.DBase.Query(
+			getTasksByTitleOrCommentQuery,
+			sql.Named("likeExp", pattern),
+			sql.Named("limit", limit),
+		)
+	case dateExp != "":
+		rows, err = repository.DBase.Query(
+			getTasksByDateQuery,
+			sql.Named("dateExp", dateExp),
+			sql.Named("limit", limit),
+		)
+	default:
+		rows, err = repository.DBase.Query(
+			getTasksQuery,
+			sql.Named("limit", limit),
+		)
+	}
+
+	if err != nil {
+		taskList.Tasks = tasks
+		return taskList, fmt.Errorf("failed to find tasks: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			id      string
+			title   string
+			date    string
+			comment string
+			repeat  string
+		)
+
+		err := rows.Scan(&id, &date, &title, &comment, &repeat)
+		if err != nil {
+			taskList.Tasks = tasks
+			return taskList, fmt.Errorf("failed to read record: %w", err)
+		}
+
+		tasks = append(
+			tasks,
+			models.Task{
+				Id:      id,
+				Title:   title,
+				Date:    date,
+				Comment: comment,
+				Repeat:  repeat,
+			},
+		)
+
+	}
+	taskList.Tasks = tasks
+	if taskList.Tasks == nil {
+		taskList.Tasks = make([]models.Task, 0)
+	}
+	return taskList, nil
 }

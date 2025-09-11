@@ -29,13 +29,15 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	log.Println("=== Add Task Begin ===")
 	log.Printf("Receive %s: '%s'\n", request.Method, request.URL.String())
 
+	var (
+		task          models.Task   // Модель, которую ожидаем в запросе
+		responseError models.Error  // Модель, которую нужно вернуть в случае ошибки
+		responseId    models.TaskId // Модель, которую нужно вернуть в случае успеха
+		err           error
+		buf           bytes.Buffer
+	)
+
 	// Пробуем получить задачу из запроса
-	var task models.Task
-	var responseError models.Error
-	var responseId models.TaskId
-	var err error
-	var buf bytes.Buffer
-	//
 	_, err = buf.ReadFrom(request.Body)
 	if err != nil {
 		log.Printf("Read from body return error: '%s'\n", err.Error())

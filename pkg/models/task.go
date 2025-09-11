@@ -11,7 +11,7 @@ import (
 
 const (
 	titleRegex   = "^[A-Za-zА-Яа-яёЁ0-9 -]{0,128}$"
-	commentRegex = "^[A-Za-zА-Яа-яёЁ0-9 -,.!?]{0,512}$"
+	commentRegex = "^[A-Za-zА-Яа-яёЁ0-9 -,.!?:]{0,512}$"
 )
 
 var errorTitleIsEmpty = errors.New("variable 'title' cannot be empty")
@@ -31,9 +31,14 @@ type Task struct {
 	Repeat  string `json:"repeat"`  // правило повторения
 }
 
-// Структура,  описывающая Id задачи планировщика
+// Структура, описывающая Id задачи планировщика
 type TaskId struct {
 	Id string `json:"id"` // Идентификатор задачи
+}
+
+// Структура, описывающая список задачи планировщика
+type TaskList struct {
+	Tasks []Task `json:"tasks"`
 }
 
 func (task *Task) CheckAndEnrichNewTask() (*Task, error) {
@@ -63,14 +68,16 @@ func (task *Task) CheckAndEnrichNewTask() (*Task, error) {
 		if err != nil {
 			return task, err
 		}
-		if dateTime.Before(now) && (task.Repeat != "") {
-			date, err := service_date_next.New().NextDate(time.Now(), task.Date, task.Repeat)
-			if err != nil {
-				return task, err
+		if dateTime.Before(now) {
+			if task.Repeat != "" {
+				date, err := service_date_next.New().NextDate(time.Now(), task.Date, task.Repeat)
+				if err != nil {
+					return task, err
+				}
+				task.Date = date
+			} else { // Дату нельзя оставить меньше сегодняшней если нет повторов
+				task.Date = now.Format("20060102")
 			}
-			task.Date = date
-		} else { // Дату нельзя оставить меньше сегодняшней если нет повторов
-			task.Date = now.Format("20060102")
 		}
 	} else {
 		task.Date = time.Now().Format("20060102")
