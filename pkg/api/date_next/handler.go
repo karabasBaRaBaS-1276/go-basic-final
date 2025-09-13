@@ -45,10 +45,10 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	} else {
 		result, err := handler.service.NextDate(now, date, repeat)
 		if err != nil {
-			log.Printf("Error: %s'\n", err.Error())
+			log.Printf("Error: '%s'\n", err.Error())
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 		} else {
-			log.Printf("Success: %s'\n", result)
+			log.Printf("Success: '%s'\n", result)
 			fmt.Fprint(writer, result)
 		}
 	}

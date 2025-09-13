@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	titleRegex   = "^[A-Za-zА-Яа-яёЁ0-9 -]{0,128}$"
+	titleRegex   = "^[A-Za-zА-Яа-яёЁ0-9 -,.!?:]{0,128}$"
 	commentRegex = "^[A-Za-zА-Яа-яёЁ0-9 -,.!?:]{0,512}$"
 )
 
@@ -61,14 +61,15 @@ func (task *Task) CheckAndEnrichNewTask() (*Task, error) {
 			return task, err
 		}
 	}
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 
 	if task.Date != "" {
 		dateTime, err := time.Parse("20060102", task.Date)
-		now := time.Now()
 		if err != nil {
 			return task, err
 		}
-		if dateTime.Before(now) {
+		if dateTime.Before(today) {
 			if task.Repeat != "" {
 				date, err := service_date_next.New().NextDate(time.Now(), task.Date, task.Repeat)
 				if err != nil {
@@ -76,11 +77,11 @@ func (task *Task) CheckAndEnrichNewTask() (*Task, error) {
 				}
 				task.Date = date
 			} else { // Дату нельзя оставить меньше сегодняшней если нет повторов
-				task.Date = now.Format("20060102")
+				task.Date = today.Format("20060102")
 			}
 		}
 	} else {
-		task.Date = time.Now().Format("20060102")
+		task.Date = today.Format("20060102")
 	}
 	return task, nil
 }

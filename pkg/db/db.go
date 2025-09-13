@@ -41,6 +41,10 @@ const (
 		SELECT id, date, title, comment, repeat FROM scheduler
 		ORDER BY date LIMIT :limit;
 	`
+	getTaskById = `
+		SELECT id, date, title, comment, repeat FROM scheduler
+		WHERE id = :id;
+	`
 )
 
 type Repository struct {
@@ -171,4 +175,40 @@ func (repository Repository) GetTasks(likeExp string, dateExp string, limit int)
 		taskList.Tasks = make([]models.Task, 0)
 	}
 	return taskList, nil
+}
+
+// Получить информацию о задаче
+func (repository Repository) InfoTask(idTask string) (models.Task, error) {
+	if idTask == "" {
+		return models.Task{}, fmt.Errorf("failed to read record: 'id' cannot be empty")
+	}
+
+	row := repository.DBase.QueryRow(
+		getTaskById,
+		sql.Named("id", idTask),
+	)
+
+	var (
+		id      string
+		title   string
+		date    string
+		comment string
+		repeat  string
+	)
+
+	err := row.Scan(&id, &date, &title, &comment, &repeat)
+	if err != nil {
+		return models.Task{}, fmt.Errorf("failed to read record (id = %s): %w", idTask, err)
+	}
+
+	task := models.Task{
+		Id:      id,
+		Title:   title,
+		Date:    date,
+		Comment: comment,
+		Repeat:  repeat,
+	}
+
+	return task, nil
+
 }

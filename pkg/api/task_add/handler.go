@@ -64,7 +64,7 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	log.Printf("Data for business logic: %#v\n", task)
 	result, err := handler.service.Add(&task)
 	if err != nil {
-		log.Printf("Error: %s'\n", err.Error())
+		log.Printf("Error: '%s'\n", err.Error())
 		responseError.Error = err.Error()
 		resp, err := json.Marshal(responseError)
 		if err != nil {
@@ -73,7 +73,7 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 		http.Error(writer, string(resp), http.StatusBadRequest)
 		return
 	}
-	log.Printf("Success: %s'\n", result)
+	log.Printf("Success: '%s'\n", result)
 	responseId.Id = result
 	resp, err := json.Marshal(responseId)
 	if err != nil {
