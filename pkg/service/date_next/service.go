@@ -3,6 +3,7 @@ package service_date_next
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -10,11 +11,12 @@ import (
 
 // Структура сервиса
 type Service struct {
+	log *log.Logger // логгер
 }
 
 // Инициализация экземпляра структуры Service
-func New() *Service {
-	return &Service{}
+func New(log *log.Logger) *Service {
+	return &Service{log: log}
 }
 
 var errorFormatDate = errors.New("incorrect date format in 'date' variable")
@@ -43,14 +45,18 @@ var errorRepeatFormat = errors.New("incorrect format in 'repeat' variable")
 // Это сделает код более читаемым
 func (service *Service) NextDate(now time.Time, dstart string, repeat string) (string, error) {
 
+	log := service.log
+	log.Printf("   Service 'NextDate' Begin with now = %s, date = %s, repeat = %s\n", now.Format("20060102"), dstart, repeat)
 	dbegin, err := time.Parse("20060102", dstart)
 	if err != nil {
+		log.Printf("   Service Error: '%s'\n", err.Error())
 		return "", fmt.Errorf("%w: %w", errorFormatDate, err)
 	}
 
 	typeRule, dayNumber, weekDays, monthDays, monthNumbers, err := CheckAndSpliteRepeat(repeat)
 
 	if err != nil {
+		log.Printf("   Service Error: '%s'\n", err.Error())
 		return "", fmt.Errorf("%w: %w", errorRepeatFormat, err)
 	}
 
@@ -96,7 +102,6 @@ func (service *Service) NextDate(now time.Time, dstart string, repeat string) (s
 			if date.After(now) {
 				month := int(date.Month()) // Номер месяца
 				day := date.Day()          // Номер дня
-				// todo. Что делать, если в monthDays указаны -2 или -1
 				//
 				if contains(monthDays, day) || checkOnLastDays(monthDays, date) { // Дни совпали
 					if len(monthNumbers) > 0 { // Есть указание на конкретные месяцы
@@ -115,8 +120,9 @@ func (service *Service) NextDate(now time.Time, dstart string, repeat string) (s
 			date = date.AddDate(0, 0, 1)
 		}
 	}
-
-	return date.Format("20060102"), err
+	result := date.Format("20060102")
+	log.Printf("   Service Success: new date = %s\n", result)
+	return result, err
 }
 
 // Проверить и разделить правила для повтора

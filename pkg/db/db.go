@@ -54,6 +54,10 @@ const (
 			repeat = :repeat
 		WHERE id = :id;
 	`
+	deleteTaskQueryById = `
+		DELETE FROM scheduler 
+		WHERE id = :id;
+	`
 )
 
 type Repository struct {
@@ -245,4 +249,29 @@ func (repository *Repository) EditTask(task *models.Task) error {
 	}
 
 	return nil
+}
+
+// Удалить задачу
+func (repository Repository) DelTask(idTask string) error {
+	if idTask == "" {
+		return fmt.Errorf("failed to delete record: 'id' cannot be empty")
+	}
+
+	result, err := repository.DBase.Exec(
+		deleteTaskQueryById,
+		sql.Named("id", idTask),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to delete record: %w", err)
+	}
+	count, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to delete record: %w", err)
+	}
+	if count == 0 {
+		return fmt.Errorf(`incorrect id for delete task`)
+	}
+
+	return nil
+
 }

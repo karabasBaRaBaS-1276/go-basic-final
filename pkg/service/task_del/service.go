@@ -1,10 +1,9 @@
-package service_task_edit
+package service_task_del
 
 import (
 	"log"
 
 	dbase "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/db"
-	models "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/models"
 )
 
 // Структура сервиса
@@ -18,21 +17,16 @@ func New(log *log.Logger, repository *dbase.Repository) *Service {
 	return &Service{log: log, repository: repository}
 }
 
-// Изменить задачу
+// Удалить задачу
 // Принимает на вход:
-//   - task - новая информация о задаче
+//   - идентификатор задачи
 //
 // Возвращает:
 //   - Ошибка
-func (service *Service) Edit(task *models.Task) error {
+func (service *Service) Delete(idTask string) error {
 	log := service.log
-	log.Printf("   Service 'Edit' Begin with task = %#v\n", task)
-	// Проверяем на корректность указанных в задаче данных
-	task, err := task.CheckAndEnrichNewTask(log)
-	if err != nil {
-		return err
-	}
-	// Редактируем таску в БД
-	err = service.repository.EditTask(task)
+	log.Printf("   Service 'Delete' Begin with id = %s\n", idTask)
+	// Удаляем таску в БД
+	err := service.repository.DelTask(idTask)
 	return err
 }

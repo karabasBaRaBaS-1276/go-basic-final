@@ -1,6 +1,7 @@
 package service_tasks_get
 
 import (
+	"log"
 	"time"
 
 	dbase "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/db"
@@ -11,12 +12,13 @@ const limit = 50
 
 // Структура сервиса
 type Service struct {
+	log        *log.Logger       // логгер
 	repository *dbase.Repository // указатель на хранилище
 }
 
 // Инициализация экземпляра структуры Service
-func New(repository *dbase.Repository) *Service {
-	return &Service{repository: repository}
+func New(log *log.Logger, repository *dbase.Repository) *Service {
+	return &Service{log: log, repository: repository}
 }
 
 // Получить список ближайших задач планировщика
@@ -27,6 +29,9 @@ func New(repository *dbase.Repository) *Service {
 //   - Массив найденных записей
 //   - Ошибка
 func (service *Service) Get(search string) (models.TaskList, error) {
+
+	log := service.log
+	log.Printf("   Service 'Get' Begin with search = '%s'\n", search)
 	// Проверяем на корректность указанных в задаче данных
 	var (
 		likeExp string

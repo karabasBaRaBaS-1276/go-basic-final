@@ -2,6 +2,7 @@ package tests
 
 import (
 	"errors"
+	"log"
 	"testing"
 	"time"
 
@@ -43,11 +44,12 @@ func TestNextDateFunc(t *testing.T) {
 		{"20231225", "d 12", `20240130`, ""},
 		{"20240228", "d 1", "20240229", ""},
 	}
+	log := log.Default()
 	check := func() {
 		for _, v := range tbl {
 			now, _ := time.Parse("20060102", "20240126") // Если сегодня 26 января 2024 года
-			service := service_date_next.New()
-			result, err := service.NextDate(now, v.date, v.repeat)
+
+			result, err := service_date_next.New(log).NextDate(now, v.date, v.repeat)
 
 			if err != nil {
 				assert.ErrorContains(t, err, v.wantError, "Данные для проверки: {Начальное время: %q, Правило для повтора: %q, Ждем в ошибке: %q}",

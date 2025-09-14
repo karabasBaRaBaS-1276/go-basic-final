@@ -19,7 +19,7 @@ type Handle struct {
 
 // Инициализация экземпляра структуры Handle
 func New(log *log.Logger, repository *dbase.Repository) *Handle {
-	return &Handle{log: log, service: service_task_add.New(repository)}
+	return &Handle{log: log, service: service_task_add.New(log, repository)}
 }
 
 // Обработка http запроса добавления новой задачи

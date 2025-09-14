@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"log"
 	"regexp"
 	"time"
 
@@ -10,8 +11,8 @@ import (
 )
 
 const (
-	titleRegex   = "^[A-Za-zА-Яа-яёЁ0-9 -,.!?:]{0,128}$"
-	commentRegex = "^[A-Za-zА-Яа-яёЁ0-9 -,.!?:]{0,512}$"
+	titleRegex   = "^[-A-Za-zА-Яа-яёЁ0-9 ,.!?:\\/]{0,128}$"
+	commentRegex = "^[-A-Za-zА-Яа-яёЁ0-9 ,.!?:\\/]{0,512}$"
 )
 
 var errorTitleIsEmpty = errors.New("variable 'title' cannot be empty")
@@ -41,7 +42,7 @@ type TaskList struct {
 	Tasks []Task `json:"tasks"`
 }
 
-func (task *Task) CheckAndEnrichNewTask() (*Task, error) {
+func (task *Task) CheckAndEnrichNewTask(log *log.Logger) (*Task, error) {
 
 	if task.Title == "" {
 		return task, errorTitleIsEmpty
@@ -71,7 +72,7 @@ func (task *Task) CheckAndEnrichNewTask() (*Task, error) {
 		}
 		if dateTime.Before(today) {
 			if task.Repeat != "" {
-				date, err := service_date_next.New().NextDate(time.Now(), task.Date, task.Repeat)
+				date, err := service_date_next.New(log).NextDate(time.Now(), task.Date, task.Repeat)
 				if err != nil {
 					return task, err
 				}

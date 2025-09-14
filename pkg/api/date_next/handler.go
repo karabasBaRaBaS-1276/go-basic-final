@@ -17,7 +17,7 @@ type Handle struct {
 
 // Инициализация экземпляра структуры Handle
 func New(log *log.Logger) *Handle {
-	return &Handle{log: log, service: service_date_next.New()}
+	return &Handle{log: log, service: service_date_next.New(log)}
 }
 
 // Обработка http запроса получения новой даты
