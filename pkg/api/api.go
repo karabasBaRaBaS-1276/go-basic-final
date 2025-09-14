@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	authorization "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/authorization"
 	nextdate "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/date_next"
 	addtask "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/task_add"
 	deltask "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/task_del"
@@ -45,4 +46,7 @@ func Init(log *log.Logger, mux *http.ServeMux, repository *dbase.Repository) {
 	handlerDoneTask := donetask.New(log, repository)
 	mux.HandleFunc("POST /api/task/done", handlerDoneTask.ServeHTTP)
 
+	// Авторизация
+	handlerAuthorization := authorization.New(log)
+	mux.HandleFunc("POST /api/signin", handlerAuthorization.ServeHTTP)
 }

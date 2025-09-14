@@ -25,6 +25,7 @@ func loadEnv(log *log.Logger) {
 	setDefaultEnv("TODO_PORT", "7540")           // Порт для запуска веб сервера по умолчанию
 	setDefaultEnv("TODO_DBDRIVER", "sqlite")     // Драйвер для работы с БД
 	setDefaultEnv("TODO_DBFILE", "scheduler.db") // Имя базы данных
+	setDefaultEnv("TODO_PASSWORD", "Abcd123456") // Пароль пользователя
 }
 
 // Установка окружений по умолчанию, если их нет
