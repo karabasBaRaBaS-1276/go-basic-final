@@ -39,6 +39,7 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	} else {
 		now, err = time.Parse("20060102", nowSt)
 	}
+	writer.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	if err != nil {
 		log.Printf("Error time parse 'now': '%s'\n", err.Error())
 		http.Error(writer, err.Error(), http.StatusBadRequest)
@@ -53,6 +54,4 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 		}
 	}
 	log.Println("===  << End >> ===")
-
-	writer.Header().Set("Content-Type", "text/plain; charset=utf-8")
 }

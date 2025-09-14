@@ -23,10 +23,10 @@ const (
 		CREATE INDEX IF NOT EXISTS idx_scheduler_date ON scheduler (date);
 		`
 	addTaskQuery = `
-		INSERT INTO scheduler (
-			date, title, comment, repeat) 
-			VALUES (:date, :title, :comment, :repeat
-		);`
+		INSERT INTO scheduler 
+			(date, title, comment, repeat) 
+			VALUES (:date, :title, :comment, :repeat);
+		`
 	getTasksByTitleOrCommentQuery = `
 		SELECT id, date, title, comment, repeat FROM scheduler
 		WHERE title LIKE :likeExp OR comment LIKE :likeExp
@@ -43,6 +43,15 @@ const (
 	`
 	getTaskById = `
 		SELECT id, date, title, comment, repeat FROM scheduler
+		WHERE id = :id;
+	`
+	editTaskQueryById = `
+		UPDATE scheduler 
+		SET 
+			date = :date, 
+			title = :title, 
+			comment = :comment, 
+			repeat = :repeat
 		WHERE id = :id;
 	`
 )
@@ -211,4 +220,29 @@ func (repository Repository) InfoTask(idTask string) (models.Task, error) {
 
 	return task, nil
 
+}
+
+// Редактировать задачу в планировщике
+func (repository *Repository) EditTask(task *models.Task) error {
+
+	result, err := repository.DBase.Exec(
+		editTaskQueryById,
+		sql.Named("date", task.Date),
+		sql.Named("title", task.Title),
+		sql.Named("comment", task.Comment),
+		sql.Named("repeat", task.Repeat),
+		sql.Named("id", task.Id),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to edit record: %w", err)
+	}
+	count, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to edit record: %w", err)
+	}
+	if count == 0 {
+		return fmt.Errorf(`incorrect id for edit task`)
+	}
+
+	return nil
 }

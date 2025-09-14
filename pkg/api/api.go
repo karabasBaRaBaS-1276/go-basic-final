@@ -6,6 +6,7 @@ import (
 
 	nextdate "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/date_next"
 	addtask "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/task_add"
+	edittask "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/task_edit"
 	infotask "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/task_info"
 	gettasks "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/api/tasks_get"
 	dbase "github.com/karabasBaRaBaS-1276/go-basic-final/pkg/db"
@@ -27,8 +28,8 @@ func Init(log *log.Logger, mux *http.ServeMux, repository *dbase.Repository) {
 	mux.HandleFunc("GET /api/task", handlerInfoTask.ServeHTTP)
 
 	// Изменить данные о задаче
-	//handlerEditTask := edittask.New(log, repository)
-	//mux.HandleFunc("PUT /api/task", handlerEditTask.ServeHTTP)
+	handlerEditTask := edittask.New(log, repository)
+	mux.HandleFunc("PUT /api/task", handlerEditTask.ServeHTTP)
 
 	// Получить список ближайших задач
 	handlerGetTasks := gettasks.New(log, repository)

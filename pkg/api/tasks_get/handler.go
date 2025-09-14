@@ -36,6 +36,8 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	// Отдаем данные в бизнес логику
 	log.Printf("Data for business logic: search = '%s'\n", search)
 	taskList, err := handler.service.Get(search)
+
+	writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
 		log.Printf("Error: '%s'\n", err.Error())
 		responseError.Error = err.Error()
@@ -58,6 +60,4 @@ func (handler *Handle) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	}
 
 	log.Println("===  << End >> ===")
-
-	writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
