@@ -21,11 +21,12 @@ func loadEnv(log *log.Logger) {
 		}
 	}
 	// Установка переменных по умолчанию
-	setDefaultEnv("TODO_HOST", "localhost")      // Хост для запуска веб сервера по умолчанию
-	setDefaultEnv("TODO_PORT", "7540")           // Порт для запуска веб сервера по умолчанию
-	setDefaultEnv("TODO_DBDRIVER", "sqlite")     // Драйвер для работы с БД
-	setDefaultEnv("TODO_DBFILE", "scheduler.db") // Имя базы данных
-	setDefaultEnv("TODO_PASSWORD", "Abcd123456") // Пароль пользователя
+	setDefaultEnv("TODO_HOST", "localhost")                            // Хост для запуска веб сервера по умолчанию
+	setDefaultEnv("TODO_PORT", "7540")                                 // Порт для запуска веб сервера по умолчанию
+	setDefaultEnv("TODO_DBDRIVER", "sqlite")                           // Драйвер для работы с БД
+	setDefaultEnv("TODO_DBFILE", "scheduler.db")                       // Имя базы данных
+	setDefaultEnv("TODO_PASSWORD", "12345")                            // Пароль пользователя
+	setDefaultEnv("TODO_JWT_SECRET_KEY", "Секретный ключ для подписи") // Секретный ключ для подписи jwt
 }
 
 // Установка окружений по умолчанию, если их нет

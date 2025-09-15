@@ -18,35 +18,35 @@ import (
 // Инициализация API обработчиков
 func Init(log *log.Logger, mux *http.ServeMux, repository *dbase.Repository) {
 
+	// Авторизация
+	handlerAuthorization := authorization.New(log)
+	mux.Handle("POST /api/signin", PanicMiddleware(http.HandlerFunc(handlerAuthorization.ServeHTTP)))
+
 	// Получить следующую дату
 	handlerNextDate := nextdate.New(log)
-	mux.HandleFunc("GET /api/nextdate", handlerNextDate.ServeHTTP)
+	mux.Handle("GET /api/nextdate", PanicMiddleware(http.HandlerFunc(handlerNextDate.ServeHTTP)))
 
 	// Добавить новую задачу
 	handlerAddTask := addtask.New(log, repository)
-	mux.HandleFunc("POST /api/task", handlerAddTask.ServeHTTP)
+	mux.Handle("POST /api/task", PanicMiddleware(JWTAuthMiddleware(log, http.HandlerFunc(handlerAddTask.ServeHTTP))))
 
 	// Получить данные о задаче
 	handlerInfoTask := infotask.New(log, repository)
-	mux.HandleFunc("GET /api/task", handlerInfoTask.ServeHTTP)
+	mux.Handle("GET /api/task", PanicMiddleware(JWTAuthMiddleware(log, http.HandlerFunc(handlerInfoTask.ServeHTTP))))
 
 	// Изменить данные о задаче
 	handlerEditTask := edittask.New(log, repository)
-	mux.HandleFunc("PUT /api/task", handlerEditTask.ServeHTTP)
+	mux.Handle("PUT /api/task", PanicMiddleware(JWTAuthMiddleware(log, http.HandlerFunc(handlerEditTask.ServeHTTP))))
 
 	// Получить список ближайших задач
 	handlerGetTasks := gettasks.New(log, repository)
-	mux.HandleFunc("GET /api/tasks", handlerGetTasks.ServeHTTP)
+	mux.Handle("GET /api/tasks", PanicMiddleware(JWTAuthMiddleware(log, http.HandlerFunc(handlerGetTasks.ServeHTTP))))
 
 	// Удалить задачу
 	handlerDelTask := deltask.New(log, repository)
-	mux.HandleFunc("DELETE /api/task", handlerDelTask.ServeHTTP)
+	mux.Handle("DELETE /api/task", PanicMiddleware(JWTAuthMiddleware(log, http.HandlerFunc(handlerDelTask.ServeHTTP))))
 
 	// Отместить задачу выполненной
 	handlerDoneTask := donetask.New(log, repository)
-	mux.HandleFunc("POST /api/task/done", handlerDoneTask.ServeHTTP)
-
-	// Авторизация
-	handlerAuthorization := authorization.New(log)
-	mux.HandleFunc("POST /api/signin", handlerAuthorization.ServeHTTP)
+	mux.Handle("POST /api/task/done", PanicMiddleware(JWTAuthMiddleware(log, http.HandlerFunc(handlerDoneTask.ServeHTTP))))
 }

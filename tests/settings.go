@@ -4,4 +4,4 @@ var Port = 7540
 var DBFile = "../scheduler.db"
 var FullNextDate = true
 var Search = true
-var Token = ``
+var Token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tL2thcmFiYXNCYVJhQmFTLTEyNzYvZ28tYmFzaWMtZmluYWwiLCJzdWIiOiJhZG1pbiIsImF1ZCI6WyJ3ZWItYXBwIl0sImV4cCI6MTc1Nzk5MjIzOCwibmJmIjoxNzU3OTYzNDM4LCJpYXQiOjE3NTc5NjM0MzgsImp0aSI6ImFkbWluLTE3NTc5NjM0MzgifQ.3GAkpZmYPYssYS2q5TB0Zl3PO0ZH4xvYGJl0QWe7gfs`
