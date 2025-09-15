@@ -23,19 +23,40 @@ go mod tidy
 2. `TODO_PORT` = 7540 - Порт для запуска веб сервера
 3. `TODO_DBDRIVER` = sqlite - Драйвер для работы с БД
 4. `TODO_DBFILE` = scheduler.db - Имя файла базы данных
+5. `TODO_JWT_SECRET_KEY` = Секретный ключ для подписи
+6. `TODO_PASSWORD` = 12345
 
 ## Структура проекта
 
 Структура проекта:
 ```
 ├── pkg/
-│   ├── server/              // package server           - функция для запуска сервера
-│   ├── api/                 // package api              - регистрация обработчиков для api
-│   │   └── next_date/       // package api_nextdate     - обработчик http запроса получения новой даты
+│   ├── server/              // package server            - функция для запуска сервера
+│   ├── api/                 // package api               - регистрация обработчиков для api и middleware слой
+│   │   ├── api_common       // packege api_common        - общие методы для переиспользования в иных обработчиках
+│   │   ├── authorization    // packege api_authorization - обработчик http запроса на авторизацию
+│   │   ├── date_next        // package api_date_next     - обработчик http запроса получения новой даты
+│   │   ├── task_add         // package api_task_add      - обработчик http запроса добавления новой задачи
+│   │   ├── task_del         // package api_task_del      - обработчик http запроса удаления задачи
+│   │   ├── task_done        // package api_task_done     - обработчик http запроса запроса на завершение задачи
+│   │   ├── task_edit        // package api_task_edit     - обработчик http запроса редактирования задачи
+│   │   ├── task_info        // package api_task_info     - обработчик http запроса получения информации о задаче
+│   │   └── tasks_get        // package api_tasks_get     - обработчик http запроса получения списка ближайших задач
+│   │
+│   ├── models/              // package models            - описание моделей приложения
 │   ├── service/
-│   │   └── next_date/       // package service_nextdate - сервис получения новой даты
-│   └── db/                  // package db               - работа с базой данных
-└── go.mod
+│   │   ├── authorization    // packege service_authorization - сервис по работе с авторизацией
+│   │   ├── date_next/       // package service_date_next     - сервис получения новой даты
+│   │   ├── task_add         // package service_task_add      - сервис добавления новой задачи
+│   │   ├── task_del         // package service_task_del      - сервис удаления задачи
+│   │   ├── task_done        // package service_task_done     - сервис на завершение задачи
+│   │   ├── task_edit        // package service_task_edit     - сервис редактирования задачи
+│   │   ├── task_info        // package service_task_info     - сервис получения информации о задаче
+│   │   └── tasks_get        // package service_tasks_get     - сервис получения списка ближайших задач
+│   │
+│   └── db/                  // package db                 - работа с базой данных
+│── go.mod
+└── go.sum
 ```
 ## Структура базы данных
 ### Таблица для хранения списка задач (scheduler);

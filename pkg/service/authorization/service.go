@@ -37,7 +37,7 @@ func New(log *log.Logger) *Service {
 
 // Авторизация пользователя
 // Принимает на вход:
-//   - task - информация о новой задаче
+//   - auth - информация для авторизации
 //
 // Возвращает:
 //   - Токен доступа
@@ -74,6 +74,14 @@ func (service *Service) Signin(auth *models.Auth) (string, error) {
 	return signedToken, nil
 }
 
+// Проверить токен
+//
+// Принимает на вход:
+//   - токен для проверки
+//
+// Возвращает:
+//   - true если токен успешно проверен
+//   - Ошибка
 func (service *Service) ValidateToken(tokenString string) (bool, error) {
 
 	claims := Claims{}
