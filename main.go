@@ -59,7 +59,7 @@ func main() {
 	// Веб сервер, с которым нам предстоит работать
 	webServer := server.Get(log, fmt.Sprintf("%s:%s", os.Getenv("TODO_HOST"), os.Getenv("TODO_PORT")), repository)
 
-	log.Printf("Запускаем веб сервер на http://%s\n", webServer.Addr)
+	log.Printf("Запускаем веб сервер. Перейдите по http://%s/login.html для работы\n", webServer.Addr)
 	if err := webServer.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}

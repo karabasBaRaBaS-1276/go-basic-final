@@ -1,0 +1,13 @@
+# Исключить ненужные дирректории из области видимости docker
+.git/
+.github/
+.idea/
+.vscode/
+postman/
+# Исключить ненужные файлы из области видимости docker
+.gitignore
+.dockerignore
+.env
+scheduler.db
+Dockerfile
+README.md
