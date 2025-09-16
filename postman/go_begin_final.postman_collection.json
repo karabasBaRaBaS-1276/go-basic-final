@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "d1460469-e96a-4030-8ccc-5390a5537984",
+		"name": "go_begin_final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5795798"
+	},
+	"item": [
+		{
+			"name": "/api/nextdate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/nextdate?now=20251008&date=20250908&repeat=m 7,10 2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"nextdate"
+					],
+					"query": [
+						{
+							"key": "now",
+							"value": "20251008",
+							"description": "Текущая дата"
+						},
+						{
+							"key": "date",
+							"value": "20250908",
+							"description": "Дата в задании планировщика"
+						},
+						{
+							"key": "repeat",
+							"value": "m 7,10 2",
+							"description": "Правило для повтора"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Сделать что-нибудь\",\r\n    \"comment\": \"Нужно обсудить, что делаем в выходные!\",\r\n    \"date\": \"20240909\",\r\n    \"repeat\": \"m 5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/task",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\": \"Abcd123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/signin",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/task",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Сделать что-нибудь\",\r\n    \"comment\": \"Нужно обсудить, что делаем в выходные!\",\r\n    \"date\": \"20240909\",\r\n    \"repeat\": \"m 5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/task?id=155",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"task"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "155"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/tasks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/tasks?search=",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
